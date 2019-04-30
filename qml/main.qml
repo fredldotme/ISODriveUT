@@ -8,7 +8,10 @@ ApplicationWindow {
     id: window
     visible: true
 
+    property bool dialogIsOpen : false
+
     header: ToolBar {
+        visible: !dialogIsOpen
         RowLayout {
             anchors.fill: parent
             Label {
@@ -55,6 +58,7 @@ ApplicationWindow {
                     if (isoManager.validatePassword()) {
                         refreshList()
                         PopupUtils.close(dialogue)
+                        dialogIsOpen = false
                     } else {
                         entry.text = ""
                     }
@@ -63,7 +67,11 @@ ApplicationWindow {
             Button {
                 text: "Cancel"
                 color: UbuntuColors.grey
-                onClicked: PopupUtils.close(dialogue)
+                onClicked: {
+                    PopupUtils.close(dialogue)
+                    dialogIsOpen = false
+                    Qt.quit()
+                }
             }
         }
     }
@@ -120,6 +128,7 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
+        dialogIsOpen = true
         PopupUtils.open(dialog)
     }
 }
