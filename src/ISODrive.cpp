@@ -11,7 +11,6 @@ int main(int argc, char *argv[])
     QGuiApplication::setSetuidAllowed(true);
     qmlRegisterType<FileManager>("FileManager", 1, 0, "FileManager");
     qmlRegisterType<UtIsoManager>("ISOManager", 1, 0, "ISOManager");
-
     FileManager* fileManager = new FileManager();
     UtIsoManager* isoManager = new UtIsoManager();
 

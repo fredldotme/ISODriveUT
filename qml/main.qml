@@ -52,8 +52,12 @@ ApplicationWindow {
                 color: UbuntuColors.orange
                 onClicked: {
                     isoManager.userPassword = entry.text
-                    refreshList()
-                    PopupUtils.close(dialogue)
+                    if (isoManager.validatePassword()) {
+                        refreshList()
+                        PopupUtils.close(dialogue)
+                    } else {
+                        entry.text = ""
+                    }
                 }
             }
             Button {

@@ -29,6 +29,11 @@ QString UtIsoManager::userPassword()
     return this->m_userPassword;
 }
 
+bool UtIsoManager::validatePassword()
+{
+    return this->m_commandRunner->validatePassword();
+}
+
 void UtIsoManager::enableISO(const QString absolutePath)
 {
     if(enabled())

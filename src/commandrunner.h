@@ -16,6 +16,7 @@ public:
     bool writeFile(const QString& absolutePath, const QByteArray& value);
 
 public slots:
+    bool validatePassword();
     void providePassword(const QString& password);
 
 private:

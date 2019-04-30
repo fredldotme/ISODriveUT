@@ -54,3 +54,14 @@ void CommandRunner::providePassword(const QString& password)
     this->m_process->write(password.toUtf8());
     this->m_process->write("\n");
 }
+
+bool CommandRunner::validatePassword()
+{
+    const QStringList idCommand {
+        QStringLiteral("id"), QStringLiteral("-u")
+    };
+    sudo(idCommand);
+    this->m_process->waitForFinished();
+    const QByteArray output = this->m_process->readAllStandardOutput();
+    return (output.trimmed() == "0");
+}

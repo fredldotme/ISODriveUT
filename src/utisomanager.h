@@ -23,6 +23,7 @@ public:
     Q_INVOKABLE void enableISO(QString fileName) Q_DECL_OVERRIDE;
     Q_INVOKABLE bool isEnabledISO(QString fileName) Q_DECL_OVERRIDE;
     Q_INVOKABLE void resetISO() Q_DECL_OVERRIDE;
+    Q_INVOKABLE bool validatePassword();
 
 private:
     QString userPassword();
