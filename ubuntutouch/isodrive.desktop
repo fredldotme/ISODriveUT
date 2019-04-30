@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Icon=isodrive.png
+Exec=run.sh
+Name=ISODrive
+X-Ubuntu-Touch=true
