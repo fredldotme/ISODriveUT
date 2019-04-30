@@ -45,6 +45,7 @@ ApplicationWindow {
                 id: entry
                 placeholderText: "PIN or password"
                 echoMode: TextInput.Password
+                focus: true
             }
             Button {
                 text: "Ok"
