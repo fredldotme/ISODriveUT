@@ -52,7 +52,7 @@ ApplicationWindow {
             }
             Button {
                 text: "Ok"
-                color: UbuntuColors.orange
+                color: UbuntuColors.green
                 onClicked: {
                     isoManager.userPassword = entry.text
                     if (isoManager.validatePassword()) {
@@ -66,7 +66,7 @@ ApplicationWindow {
             }
             Button {
                 text: "Cancel"
-                color: UbuntuColors.grey
+                color: UbuntuColors.red
                 onClicked: {
                     PopupUtils.close(dialogue)
                     dialogIsOpen = false
