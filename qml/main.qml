@@ -93,7 +93,7 @@ ApplicationWindow {
             delegate: RadioButton {
                 readonly property string name : isoList.model[index].name
                 readonly property string path : isoList.model[index].path
-                readonly property bool isoEnabled : isoManager.selectedISO == name
+                readonly property bool isoEnabled : isoManager.selectedISO === name
 
                 width: parent.width
                 height: 32
@@ -102,7 +102,7 @@ ApplicationWindow {
                 onCheckedChanged: {
                     // Eject if this ISO is enabled
                     if (checked) {
-                        if (isoManager.selectedISO != path) {
+                        if (isoManager.selectedISO !== path) {
                             console.log("Selection: " + path)
                             isoManager.enableISO(path)
                         }
