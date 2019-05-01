@@ -1,6 +1,6 @@
 TARGET = ISODrive
 
-QT += quick
+QT += quick dbus
 
 INCLUDEPATH += \
     $$PWD/ubuntutouch/src \

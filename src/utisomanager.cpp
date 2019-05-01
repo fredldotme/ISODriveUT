@@ -1,12 +1,29 @@
 #include "utisomanager.h"
 
+#include <QDBusReply>
 #include <QDebug>
 #include <QFile>
 
+const QString SYSFS_ENABLE =
+        QStringLiteral("/sys/devices/virtual/android_usb/android0/enable");
+const QString SYSFS_FEATURES =
+        QStringLiteral("/sys/devices/virtual/android_usb/android0/functions");
+const QString SYSFS_IMG_FILE =
+        QStringLiteral("/sys/devices/virtual/android_usb/android0/f_mass_storage/lun/file");
+
+const QString PROPERTY_SERVICE_PATH =
+        QStringLiteral("/com/canonical/PropertyService");
+const QString PROPERTY_SERVICE_OBJ =
+        QStringLiteral("com.canonical.PropertyService");
 
 UtIsoManager::UtIsoManager(QObject *parent) :
     GenericIsoManager(parent),
-    m_commandRunner(new CommandRunner(this))
+    m_commandRunner(new CommandRunner(this)),
+    m_propertyService(new QDBusInterface(PROPERTY_SERVICE_OBJ,
+                                         PROPERTY_SERVICE_PATH,
+                                         PROPERTY_SERVICE_OBJ,
+                                         QDBusConnection::systemBus(),
+                                         this))
 {
     connect(this->m_commandRunner, &CommandRunner::passwordRequested,
             this->m_commandRunner, [=]() {
@@ -63,7 +80,16 @@ void UtIsoManager::resetISO()
     enableISO("");
     if(enabled())
         setEnabled(false);
-    this->m_commandRunner->writeFile(SYSFS_FEATURES, "mtp,adb\n");
+
+    QDBusReply<bool> reply = m_propertyService->call(QStringLiteral("GetProperty"),
+                                                     QStringLiteral("adb"));
+    QByteArray features = QByteArrayLiteral("mtp");
+    if (reply.isValid() && reply.value()) {
+        features += QByteArrayLiteral(",adb");
+    }
+    features += "\n";
+
+    this->m_commandRunner->writeFile(SYSFS_FEATURES, features);
     setEnabled(true);
 }
 

@@ -4,12 +4,7 @@
 #include "genericisomanager.h"
 #include "commandrunner.h"
 
-const QString SYSFS_ENABLE =
-        QStringLiteral("/sys/devices/virtual/android_usb/android0/enable");
-const QString SYSFS_FEATURES =
-        QStringLiteral("/sys/devices/virtual/android_usb/android0/functions");
-const QString SYSFS_IMG_FILE =
-        QStringLiteral("/sys/devices/virtual/android_usb/android0/f_mass_storage/lun/file");
+#include <QDBusInterface>
 
 class UtIsoManager : public GenericIsoManager
 {
@@ -35,6 +30,8 @@ private:
 
     QString m_userPassword;
     CommandRunner* m_commandRunner = nullptr;
+    QDBusInterface* m_propertyService = nullptr;
+
 
 signals:
     void selectedISOChanged();
