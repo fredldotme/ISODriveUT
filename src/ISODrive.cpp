@@ -1,6 +1,7 @@
 ﻿#include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
+#include <QTranslator>
 
 #include "filemanager.h"
 #include "utisomanager.h"
@@ -17,6 +18,13 @@ int main(int argc, char *argv[])
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication* app = new QGuiApplication(argc, argv);
     QQmlApplicationEngine* engine = new QQmlApplicationEngine(app);
+
+    const QByteArray language = qgetenv("LANGUAGE");
+    const QString translationDir = app->applicationDirPath() + QStringLiteral("/i18n/");
+    QTranslator* translator = new QTranslator(app);
+    translator->load(QStringLiteral("isodrive-%1").arg(QString::fromUtf8(language)),
+                     translationDir);
+    app->installTranslator(translator);
 
     engine->rootContext()->setContextProperty("fileManager", fileManager);
     engine->rootContext()->setContextProperty("isoManager", isoManager);

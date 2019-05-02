@@ -3,12 +3,25 @@ TARGET = ISODrive
 QT += quick dbus
 
 INCLUDEPATH += \
-    $$PWD/ubuntutouch/src \
     $$PWD/src
 
 DEPENDPATH += \
-    $$PWD/ubuntutouch/src \
     $$PWD/src
+
+lupdate_only {
+    OTHER_FILES += \
+        qml/main.qml
+}
+
+OTHER_FILES += \
+    translations/*.ts
+
+TRANSLATIONS += \
+    translations/isodrive-de.ts
+
+# Ship translations (run lupdate and lrelease before building)
+translations.files += $$PWD/translations/*.qm
+translations.path = /i18n/
 
 # figure out the current build architecture
 CLICK_ARCH=$$system(dpkg-architecture -qDEB_HOST_ARCH)
@@ -49,8 +62,7 @@ runscript.files += $$PWD/ubuntutouch/run.sh
 runscript.path = /
 
 target.path = /
-INSTALLS += mfile apparmor desktop desktopicon runscript target
-
+INSTALLS += translations mfile apparmor desktop desktopicon runscript target
 
 SOURCES += \
     $$PWD/src/ISODrive.cpp \

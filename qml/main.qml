@@ -17,22 +17,22 @@ ApplicationWindow {
             Label {
                 readonly property string activeIso :
                     isoManager.selectedISO.length > 0 ?
-                        isoManager.selectedISO : "none"
-                text: "Active: %1".arg(activeIso)
+                        isoManager.selectedISO : qsTr("none")
+                text: qsTr("Active: %1").arg(activeIso)
                 elide: Label.ElideRight
                 horizontalAlignment: Qt.AlignHCenter
                 verticalAlignment: Qt.AlignVCenter
                 Layout.fillWidth: true
             }
             ToolButton {
-                text: "Eject"
+                text: qsTr("Eject")
                 onClicked: {
                     isoManager.resetISO()
                     refreshList()
                 }
             }
             ToolButton {
-                text: "Refresh"
+                text: qsTr("Refresh")
                 onClicked: refreshList()
             }
         }
@@ -42,16 +42,16 @@ ApplicationWindow {
 
         Dialog {
             id: dialogue
-            title: "Authentication"
-            text: "Please enter your user PIN or password to continue:"
+            title: qsTr("Authentication required")
+            text: qsTr("Please enter your user PIN or password to continue:")
             TextField {
                 id: entry
-                placeholderText: "PIN or password"
+                placeholderText: qsTr("PIN or password")
                 echoMode: TextInput.Password
                 focus: true
             }
             Button {
-                text: "Ok"
+                text: qsTr("Ok")
                 color: UbuntuColors.green
                 onClicked: {
                     isoManager.userPassword = entry.text
@@ -65,7 +65,7 @@ ApplicationWindow {
                 }
             }
             Button {
-                text: "Cancel"
+                text: qsTr("Cancel")
                 color: UbuntuColors.red
                 onClicked: {
                     PopupUtils.close(dialogue)
