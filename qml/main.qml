@@ -10,83 +10,79 @@ ApplicationWindow {
 
     property bool dialogIsOpen : false
 
-    header: Header {
-        height: units.gu(8)
+    header: PageHeader {
+        visible: !dialogIsOpen
+        title: qsTr("ISODrive")
 
-        RowLayout {
-            id: actionRow
-            anchors.fill: parent
+        readonly property bool hasLoadedIso :
+            (isoManager.selectedISO.length > 0)
+        readonly property string activeIso :
+            hasLoadedIso ? isoManager.selectedISO : qsTr("none")
 
-            Label {
-                id: activeLabel
-                readonly property string activeIso :
-                    isoManager.selectedISO.length > 0 ?
-                        isoManager.selectedISO : qsTr("none")
-                text: qsTr("Active: %1").arg(activeIso)
-                elide: Label.ElideRight
-                horizontalAlignment: Qt.AlignHCenter
-                verticalAlignment: Qt.AlignVCenter
-                Layout.fillWidth: true
-                height: parent.height
+        subtitle: qsTr("Active: %1").arg(activeIso)
+
+        trailingActionBar.actions: [
+            Action {
+                text: qsTr("Eject")
+                iconName: "media-eject"
+                onTriggered: {
+                    isoManager.resetISO()
+                    refreshList()
+                }
+            },
+            Action {
+                text: qsTr("Refresh")
+                iconName: "view-refresh"
+                onTriggered: refreshList()
+            }
+        ]
+    }
+
+    Component {
+        id: dialog
+
+        Dialog {
+            id: dialogue
+            title: qsTr("Authentication required")
+            text: qsTr("Please enter your user PIN or password to continue:")
+
+            Timer {
+                id: enterDelayTimer
+                interval: 1000
+                running: false
             }
 
-            ActionBar {
-                id: actionBar
-                visible: !dialogIsOpen
-                height: parent.height
-
-                actions: [
-                    Action {
-                        text: qsTr("Eject")
-                        iconName: "media-eject"
-                        onTriggered: {
-                            isoManager.resetISO()
-                            refreshList()
-                        }
-                    },
-                    Action {
-                        text: qsTr("Refresh")
-                        iconName: "view-refresh"
-                        onTriggered: refreshList()
-                    }
-                ]
+            TextField {
+                id: entry
+                placeholderText: qsTr("PIN or password")
+                echoMode: TextInput.Password
+                focus: true
+                enabled: !enterDelayTimer.running
             }
-        }
-        Component {
-            id: dialog
-
-            Dialog {
-                id: dialogue
-                title: qsTr("Authentication required")
-                text: qsTr("Please enter your user PIN or password to continue:")
-                TextField {
-                    id: entry
-                    placeholderText: qsTr("PIN or password")
-                    echoMode: TextInput.Password
-                    focus: true
-                }
-                Button {
-                    text: qsTr("Ok")
-                    color: UbuntuColors.green
-                    onClicked: {
-                        isoManager.userPassword = entry.text
-                        if (isoManager.validatePassword()) {
-                            refreshList()
-                            PopupUtils.close(dialogue)
-                            dialogIsOpen = false
-                        } else {
-                            entry.text = ""
-                        }
-                    }
-                }
-                Button {
-                    text: qsTr("Cancel")
-                    color: UbuntuColors.red
-                    onClicked: {
+            Button {
+                text: qsTr("Ok")
+                color: UbuntuColors.green
+                enabled: !enterDelayTimer.running
+                onClicked: {
+                    isoManager.userPassword = entry.text
+                    if (isoManager.validatePassword()) {
+                        refreshList()
                         PopupUtils.close(dialogue)
                         dialogIsOpen = false
-                        Qt.quit()
+                    } else {
+                        entry.text = ""
+                        enterDelayTimer.start()
                     }
+                }
+            }
+            Button {
+                text: qsTr("Cancel")
+                color: UbuntuColors.red
+                enabled: !enterDelayTimer.running
+                onClicked: {
+                    PopupUtils.close(dialogue)
+                    dialogIsOpen = false
+                    Qt.quit()
                 }
             }
         }
@@ -94,6 +90,7 @@ ApplicationWindow {
 
     Column {
         anchors.fill: parent
+        anchors.margins: 16
         ButtonGroup {
             buttons: isoList.children
         }
@@ -112,8 +109,9 @@ ApplicationWindow {
                 readonly property bool isoEnabled : isoManager.selectedISO === name
 
                 width: parent.width
-                height: 32
+                height: units.gu(8)
                 text: name
+                font.pixelSize: units.gu(2)
                 checked: isoEnabled
                 onCheckedChanged: {
                     if (checked) {
@@ -130,12 +128,14 @@ ApplicationWindow {
 
     Label {
         anchors.fill: parent
+        anchors.margins: 16
         horizontalAlignment: Qt.AlignHCenter
         verticalAlignment: Qt.AlignVCenter
         wrapMode: Label.WrapAtWordBoundaryOrAnywhere
         text: qsTr("No .iso files found in the 'Downloads' folder. " +
                    "Download a hybrid ISO file to continue.")
         visible: isoList.count < 1
+        font.pixelSize: units.gu(3)
     }
 
     function refreshList() {
