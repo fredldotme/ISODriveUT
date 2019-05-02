@@ -9,6 +9,7 @@ ApplicationWindow {
     visible: true
 
     property bool dialogIsOpen : false
+    property bool isRefreshing : false
 
     header: PageHeader {
         visible: !dialogIsOpen
@@ -29,11 +30,6 @@ ApplicationWindow {
                     isoManager.resetISO()
                     refreshList()
                 }
-            },
-            Action {
-                text: qsTr("Refresh")
-                iconName: "view-refresh"
-                onTriggered: refreshList()
             }
         ]
     }
@@ -90,7 +86,8 @@ ApplicationWindow {
 
     Column {
         anchors.fill: parent
-        anchors.margins: 16
+        anchors.leftMargin: 16
+        anchors.rightMargin: 16
         ButtonGroup {
             buttons: isoList.children
         }
@@ -99,7 +96,6 @@ ApplicationWindow {
             id: isoList
             width: parent.width
             height: parent.height
-            contentHeight: childrenRect.height
             model: fileManager.foundFiles
             clip: true
 
@@ -123,6 +119,11 @@ ApplicationWindow {
                     refreshList()
                 }
             }
+
+            PullToRefresh {
+                refreshing: isRefreshing
+                onRefresh: refreshList()
+            }
         }
     }
 
@@ -139,7 +140,9 @@ ApplicationWindow {
     }
 
     function refreshList() {
+        isRefreshing = true
         fileManager.refresh()
+        isRefreshing = false
     }
 
     Component.onCompleted: {
