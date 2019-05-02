@@ -46,6 +46,7 @@ ApplicationWindow {
                 id: enterDelayTimer
                 interval: 1000
                 running: false
+                onTriggered: entry.text = ""
             }
 
             TextField {
@@ -66,7 +67,6 @@ ApplicationWindow {
                         PopupUtils.close(dialogue)
                         dialogIsOpen = false
                     } else {
-                        entry.text = ""
                         enterDelayTimer.start()
                     }
                 }
@@ -122,7 +122,11 @@ ApplicationWindow {
 
             PullToRefresh {
                 refreshing: isRefreshing
-                onRefresh: refreshList()
+                onRefresh: {
+                    isRefreshing = true
+                    refreshList()
+                    isRefreshing = false
+                }
             }
         }
     }
@@ -140,9 +144,7 @@ ApplicationWindow {
     }
 
     function refreshList() {
-        isRefreshing = true
         fileManager.refresh()
-        isRefreshing = false
     }
 
     Component.onCompleted: {
