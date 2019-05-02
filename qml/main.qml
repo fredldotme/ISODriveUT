@@ -10,11 +10,15 @@ ApplicationWindow {
 
     property bool dialogIsOpen : false
 
-    header: ToolBar {
-        visible: !dialogIsOpen
+    header: Header {
+        height: units.gu(8)
+
         RowLayout {
+            id: actionRow
             anchors.fill: parent
+
             Label {
+                id: activeLabel
                 readonly property string activeIso :
                     isoManager.selectedISO.length > 0 ?
                         isoManager.selectedISO : qsTr("none")
@@ -23,54 +27,66 @@ ApplicationWindow {
                 horizontalAlignment: Qt.AlignHCenter
                 verticalAlignment: Qt.AlignVCenter
                 Layout.fillWidth: true
+                height: parent.height
             }
-            ToolButton {
-                text: qsTr("Eject")
-                onClicked: {
-                    isoManager.resetISO()
-                    refreshList()
-                }
-            }
-            ToolButton {
-                text: qsTr("Refresh")
-                onClicked: refreshList()
+
+            ActionBar {
+                id: actionBar
+                visible: !dialogIsOpen
+                height: parent.height
+
+                actions: [
+                    Action {
+                        text: qsTr("Eject")
+                        iconName: "media-eject"
+                        onTriggered: {
+                            isoManager.resetISO()
+                            refreshList()
+                        }
+                    },
+                    Action {
+                        text: qsTr("Refresh")
+                        iconName: "view-refresh"
+                        onTriggered: refreshList()
+                    }
+                ]
             }
         }
-    }
-    Component {
-        id: dialog
+        Component {
+            id: dialog
 
-        Dialog {
-            id: dialogue
-            title: qsTr("Authentication required")
-            text: qsTr("Please enter your user PIN or password to continue:")
-            TextField {
-                id: entry
-                placeholderText: qsTr("PIN or password")
-                echoMode: TextInput.Password
-                focus: true
-            }
-            Button {
-                text: qsTr("Ok")
-                color: UbuntuColors.green
-                onClicked: {
-                    isoManager.userPassword = entry.text
-                    if (isoManager.validatePassword()) {
-                        refreshList()
-                        PopupUtils.close(dialogue)
-                        dialogIsOpen = false
-                    } else {
-                        entry.text = ""
+            Dialog {
+                id: dialogue
+                title: qsTr("Authentication required")
+                text: qsTr("Please enter your user PIN or password to continue:")
+                TextField {
+                    id: entry
+                    placeholderText: qsTr("PIN or password")
+                    echoMode: TextInput.Password
+                    focus: true
+                }
+                Button {
+                    text: qsTr("Ok")
+                    color: UbuntuColors.green
+                    onClicked: {
+                        isoManager.userPassword = entry.text
+                        if (isoManager.validatePassword()) {
+                            refreshList()
+                            PopupUtils.close(dialogue)
+                            dialogIsOpen = false
+                        } else {
+                            entry.text = ""
+                        }
                     }
                 }
-            }
-            Button {
-                text: qsTr("Cancel")
-                color: UbuntuColors.red
-                onClicked: {
-                    PopupUtils.close(dialogue)
-                    dialogIsOpen = false
-                    Qt.quit()
+                Button {
+                    text: qsTr("Cancel")
+                    color: UbuntuColors.red
+                    onClicked: {
+                        PopupUtils.close(dialogue)
+                        dialogIsOpen = false
+                        Qt.quit()
+                    }
                 }
             }
         }
@@ -78,7 +94,6 @@ ApplicationWindow {
 
     Column {
         anchors.fill: parent
-
         ButtonGroup {
             buttons: isoList.children
         }
@@ -89,6 +104,7 @@ ApplicationWindow {
             height: parent.height
             contentHeight: childrenRect.height
             model: fileManager.foundFiles
+            clip: true
 
             delegate: RadioButton {
                 readonly property string name : isoList.model[index].name
@@ -100,7 +116,6 @@ ApplicationWindow {
                 text: name
                 checked: isoEnabled
                 onCheckedChanged: {
-                    // Eject if this ISO is enabled
                     if (checked) {
                         if (isoManager.selectedISO !== path) {
                             console.log("Selection: " + path)
