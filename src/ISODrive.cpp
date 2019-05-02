@@ -9,7 +9,6 @@
 
 int main(int argc, char *argv[])
 {
-    QGuiApplication::setSetuidAllowed(true);
     qmlRegisterType<FileManager>("FileManager", 1, 0, "FileManager");
     qmlRegisterType<UtIsoManager>("ISOManager", 1, 0, "ISOManager");
     FileManager* fileManager = new FileManager();
@@ -22,9 +21,11 @@ int main(int argc, char *argv[])
     const QByteArray language = qgetenv("LANGUAGE");
     const QString translationDir = app->applicationDirPath() + QStringLiteral("/i18n/");
     QTranslator* translator = new QTranslator(app);
-    translator->load(QStringLiteral("isodrive-%1").arg(QString::fromUtf8(language)),
-                     translationDir);
-    app->installTranslator(translator);
+    const bool hasTranslation =
+            translator->load(QStringLiteral("isodrive-%1").arg(QString::fromUtf8(language)),
+                             translationDir);
+    if (hasTranslation)
+        app->installTranslator(translator);
 
     engine->rootContext()->setContextProperty("fileManager", fileManager);
     engine->rootContext()->setContextProperty("isoManager", isoManager);
