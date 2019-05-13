@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="fr_FR" sourcelanguage="en">
+<TS version="2.0" language="it" sourcelanguage="en">
 <context>
     <name>main</name>
     <message>
         <location filename="../qml/main.qml" line="20"/>
         <source>none</source>
-        <translation>aucune</translation>
+        <translation>nessuno</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="21"/>
         <source>Active: %1</source>
-        <translation>Activé: %1</translation>
+        <translation>Attivo: %1</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="28"/>
         <source>Eject</source>
-        <translation>Éjecter</translation>
+        <translation>Espulsione</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="35"/>
         <source>Refresh</source>
-        <translation>Actualiser</translation>
+        <translation>Rinfresca</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="45"/>
         <source>Authentication required</source>
-        <translation>Authentification requise</translation>
+        <translation>Autenticazione richiesta</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="46"/>
         <source>Please enter your user PIN or password to continue:</source>
-        <translation>Veuillez saisir votre code PIN ou votre mot de passe pour continuer :</translation>
+        <translation>Inserisci il PIN o la password dell&apos;utente per continuare:</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="49"/>
         <source>PIN or password</source>
-        <translation>Code PIN ou mot de passe</translation>
+        <translation>PIN o password</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="54"/>
@@ -46,12 +46,12 @@
     <message>
         <location filename="../qml/main.qml" line="68"/>
         <source>Cancel</source>
-        <translation>Annuler</translation>
+        <translation>Annulla</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="121"/>
         <source>No .iso files found in the &apos;Downloads&apos; folder. Download a hybrid ISO file to continue.</source>
-        <translation>Aucun fichier .iso trouvé dans le dossier « Téléchargements ». Téléchargez un fichier hybride .iso pour continuer.</translation>
+        <translation>Nessun file .iso si trova nella cartella &apos;Downloads&apos;. Scaricare un file ISO ibrido per continuare.</translation>
     </message>
 </context>
 </TS>
