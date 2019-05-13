@@ -51,7 +51,8 @@
     <message>
         <location filename="../qml/main.qml" line="121"/>
         <source>No .iso files found in the &apos;Downloads&apos; folder. Download a hybrid ISO file to continue.</source>
-        <translation>Aucun fichier .iso trouvé dans le dossier « Téléchargements ». Téléchargez un fichier hybride .iso pour continuer.</translation>
+        <translation>Aucun fichier .iso trouvé dans le dossier &apos;Téléchargements&apos;. Téléchargez un fichier hybride .iso pour continuer.</translation>
     </message>
 </context>
 </TS>
+
