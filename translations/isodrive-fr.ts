@@ -6,7 +6,7 @@
     <message>
         <location filename="../qml/main.qml" line="20"/>
         <source>none</source>
-        <translation>rien</translation>
+        <translation>aucune</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="21"/>
@@ -21,7 +21,7 @@
     <message>
         <location filename="../qml/main.qml" line="35"/>
         <source>Refresh</source>
-        <translation>Recharger</translation>
+        <translation>Actualiser</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="45"/>
@@ -31,12 +31,12 @@
     <message>
         <location filename="../qml/main.qml" line="46"/>
         <source>Please enter your user PIN or password to continue:</source>
-        <translation>S&apos;il-vous-plait entrer votre code pin ou votre mot de passe:</translation>
+        <translation>Veuillez saisir votre code PIN ou votre mot de passe pour continuer :</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="49"/>
         <source>PIN or password</source>
-        <translation>Code ou mot de passe</translation>
+        <translation>Code PIN ou mot de passe</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="54"/>
@@ -51,7 +51,7 @@
     <message>
         <location filename="../qml/main.qml" line="121"/>
         <source>No .iso files found in the &apos;Downloads&apos; folder. Download a hybrid ISO file to continue.</source>
-        <translation>Aucun fichier .iso trouvé dans le dossier &apos;Téléchargements&apos;. Télécharger un fichier ISO pour continuer.</translation>
+        <translation>Aucun fichier .iso trouvé dans le dossier « Téléchargements ». Téléchargez un fichier hybride .iso pour continuer.</translation>
     </message>
 </context>
 </TS>
