@@ -51,16 +51,21 @@ bool UtIsoManager::validatePassword()
     return this->m_commandRunner->validatePassword();
 }
 
-void UtIsoManager::enableISO(const QString absolutePath)
+void UtIsoManager::enableISO(const QString& fileName, const bool enableSharing)
 {
     if(enabled())
         setEnabled(false);
 
-    const QByteArray selectedIso = absolutePath.toUtf8();
+    const QByteArray selectedIso = fileName.toUtf8();
     this->m_commandRunner->writeFile(SYSFS_IMG_FILE, selectedIso);
     emit selectedISOChanged();
 
-    this->m_commandRunner->writeFile(SYSFS_FEATURES, "mass_storage\n");
+    QByteArray features = "mass_storage";
+    if (enableSharing) {
+        features += ",mtp";
+    }
+    features += "\n";
+    this->m_commandRunner->writeFile(SYSFS_FEATURES, features);
 
     const QByteArray finalSelectedIso = this->m_commandRunner->readFile(SYSFS_IMG_FILE);
     if(selectedIso != finalSelectedIso) {

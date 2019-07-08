@@ -15,7 +15,7 @@ class UtIsoManager : public GenericIsoManager
 public:
     explicit UtIsoManager(QObject *parent = nullptr);
 
-    Q_INVOKABLE void enableISO(QString fileName) Q_DECL_OVERRIDE;
+    Q_INVOKABLE void enableISO(const QString& fileName, const bool enableSharing = false) Q_DECL_OVERRIDE;
     Q_INVOKABLE bool isEnabledISO(QString fileName) Q_DECL_OVERRIDE;
     Q_INVOKABLE void resetISO() Q_DECL_OVERRIDE;
     Q_INVOKABLE bool validatePassword();

@@ -9,9 +9,10 @@ class GenericIsoManager : public QObject {
 public:
     GenericIsoManager(QObject* parent = nullptr) : QObject(parent) {}
 
-    virtual Q_INVOKABLE void enableISO(QString fileName)
+    virtual Q_INVOKABLE void enableISO(const QString& fileName, const bool enableSharing = false)
     {
         Q_UNUSED(fileName)
+        Q_UNUSED(enableSharing)
     }
 
     virtual Q_INVOKABLE bool isEnabledISO(QString fileName)
