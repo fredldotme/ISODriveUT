@@ -17,7 +17,14 @@ OTHER_FILES += \
     translations/*.ts
 
 TRANSLATIONS += \
-    translations/isodrive-de.ts
+    translations/isodrive-de.ts \
+    translations/isodrive-es.ts \
+    translations/isodrive-fr.ts \
+    translations/isodrive-it.ts \
+    translations/isodrive-nl.ts \
+    translations/isodrive-pl.ts \
+    translations/isodrive-pt.ts \
+    translations/isodrive-ru.ts
 
 # Ship translations (run lupdate and lrelease before building)
 translations.files += $$PWD/translations/*.qm
