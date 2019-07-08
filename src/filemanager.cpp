@@ -45,7 +45,7 @@ QVariantList FileManager::foundFiles()
 
 bool FileManager::removeFile(const QString &filePath)
 {
-    const QString absolutePath = filePath.mid(7);
+    const QString absolutePath = filePath.startsWith("file://") ? filePath.mid(7) : filePath;
     const bool ret = QFile::remove(absolutePath);
     sync();
     return ret;
