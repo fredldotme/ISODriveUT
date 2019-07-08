@@ -10,6 +10,7 @@ ApplicationWindow {
     visible: true
 
     property bool dialogIsOpen : false
+    property bool settingsDialogOpen : false
     property bool isRefreshing : false
 
     readonly property bool hasLoadedIso :
@@ -17,8 +18,9 @@ ApplicationWindow {
     readonly property string activeIso :
         hasLoadedIso ? isoManager.selectedISO : qsTr("none")
 
+
     header: PageHeader {
-        visible: !dialogIsOpen
+        visible: !(dialogIsOpen || settingsDialogOpen)
         title: qsTr("ISODrive")
 
         subtitle: qsTr("Active: %1").arg(activeIso)
@@ -36,9 +38,10 @@ ApplicationWindow {
             Action {
                 text: qsTr("Settings")
                 iconName: "settings"
-                enabled: !hasLoadedIso
+                enabled: !hasLoadedIso && !settingsDialogOpen
                 onTriggered: {
                     PopupUtils.open(settingsDialog)
+                    settingsDialogOpen = true
                 }
             }
         ]
@@ -122,6 +125,7 @@ ApplicationWindow {
                 color: UbuntuColors.green
                 onClicked: {
                     PopupUtils.close(settingsDialogue)
+                    settingsDialogOpen = false
                 }
             }
         }
