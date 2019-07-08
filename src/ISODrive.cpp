@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
 
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication* app = new QGuiApplication(argc, argv);
+    app->setApplicationName(QStringLiteral("me.fredl.isodrive"));
     QQmlApplicationEngine* engine = new QQmlApplicationEngine(app);
 
     const QByteArray language = qgetenv("LANGUAGE");
