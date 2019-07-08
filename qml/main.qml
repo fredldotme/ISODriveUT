@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.0
+import Qt.labs.settings 1.0
 import Ubuntu.Components 1.3
 import Ubuntu.Components.Popups 1.3
 
@@ -11,14 +12,14 @@ ApplicationWindow {
     property bool dialogIsOpen : false
     property bool isRefreshing : false
 
+    readonly property bool hasLoadedIso :
+        (isoManager.selectedISO.length > 0)
+    readonly property string activeIso :
+        hasLoadedIso ? isoManager.selectedISO : qsTr("none")
+
     header: PageHeader {
         visible: !dialogIsOpen
         title: qsTr("ISODrive")
-
-        readonly property bool hasLoadedIso :
-            (isoManager.selectedISO.length > 0)
-        readonly property string activeIso :
-            hasLoadedIso ? isoManager.selectedISO : qsTr("none")
 
         subtitle: qsTr("Active: %1").arg(activeIso)
 
@@ -26,14 +27,29 @@ ApplicationWindow {
             Action {
                 text: qsTr("Eject")
                 iconName: "media-eject"
+                enabled: hasLoadedIso
                 onTriggered: {
                     isoManager.resetISO()
                     refreshList()
+                }
+            },
+            Action {
+                text: qsTr("Settings")
+                iconName: "settings"
+                enabled: !hasLoadedIso
+                onTriggered: {
+                    PopupUtils.open(settingsDialog)
                 }
             }
         ]
     }
 
+    Settings {
+        id: settings
+        property bool enableMtp : false
+    }
+
+    // First start password entry
     Component {
         id: dialog
 
@@ -84,10 +100,35 @@ ApplicationWindow {
         }
     }
 
+    // Settings dialog
+    Component {
+        id: settingsDialog
+
+        Dialog {
+            id: settingsDialogue
+            title: qsTr("Settings")
+
+            CheckBox {
+                id: mtpCheckBox
+                text: qsTr("Enable MTP while using ISODrive")
+                checked: settings.enableMtp
+                onCheckedChanged: {
+                    settings.enableMtp = checked
+                }
+            }
+
+            Button {
+                text: qsTr("Ok")
+                color: UbuntuColors.green
+                onClicked: {
+                    PopupUtils.close(settingsDialogue)
+                }
+            }
+        }
+    }
+
     Column {
         anchors.fill: parent
-        anchors.leftMargin: 16
-        anchors.rightMargin: 16
         ButtonGroup {
             buttons: isoList.children
         }
@@ -99,24 +140,46 @@ ApplicationWindow {
             model: fileManager.foundFiles
             clip: true
 
-            delegate: RadioButton {
+            delegate: ListItem {
+                id: listItem
                 readonly property string name : isoList.model[index].name
                 readonly property string path : isoList.model[index].path
                 readonly property bool isoEnabled : isoManager.selectedISO === name
 
                 width: parent.width
                 height: units.gu(8)
-                text: name
-                font.pixelSize: units.gu(2)
-                checked: isoEnabled
-                onCheckedChanged: {
-                    if (checked) {
-                        if (isoManager.selectedISO !== path) {
-                            console.log("Selection: " + path)
-                            isoManager.enableISO(path)
+
+                RadioButton {
+                    text: listItem.name
+                    font.pixelSize: units.gu(2)
+                    checked: listItem.isoEnabled
+                    anchors.fill: parent
+                    anchors.leftMargin: 16
+                    anchors.rightMargin: 16
+                    onCheckedChanged: {
+                        if (checked) {
+                            if (isoManager.selectedISO !== listItem.path) {
+                                console.log("Selection: " + listItem.path)
+                                isoManager.enableISO(listItem.path, settings.enableMtp)
+                            }
                         }
+                        refreshList()
                     }
-                    refreshList()
+                }
+
+                leadingActions: ListItemActions {
+                    actions: [
+                        Action {
+                            iconName: "delete"
+                            enabled: !listItem.isoEnabled
+                            onTriggered: {
+                                fileManager.removeFile(listItem.path)
+                                isRefreshing = true
+                                refreshList()
+                                isRefreshing = false
+                            }
+                        }
+                    ]
                 }
             }
 
