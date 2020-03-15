@@ -27,14 +27,13 @@ static UsbType getUsbGadgetType()
     }
 
     while (true) {
-        QByteArray line = filesystems.readLine();
-        if (line.isEmpty())
+        const QByteArray line = filesystems.readLine();
+        const QString lineString = QString(line).trimmed();
+        if (lineString.isEmpty())
             break;
 
-        const QString lineString = QString(line).trimmed();
-
         qDebug() << lineString;
-        QStringList lineSplit = lineString.split('\t', QString::SkipEmptyParts);
+        const QStringList lineSplit = lineString.split('\t', QString::SkipEmptyParts);
         if (lineSplit.size() < 2)
             continue;
 
