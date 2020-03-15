@@ -1,20 +1,18 @@
 #include "utisomanager.h"
+#include "common.h"
 
 #include <QDBusReply>
 #include <QDebug>
 #include <QFile>
+#include <QString>
 
-const QString SYSFS_ENABLE =
+// Constants for android0 interface support
+const QString ANDROID0_SYSFS_ENABLE =
         QStringLiteral("/sys/devices/virtual/android_usb/android0/enable");
-const QString SYSFS_FEATURES =
+const QString ANDROID0_SYSFS_FEATURES =
         QStringLiteral("/sys/devices/virtual/android_usb/android0/functions");
-const QString SYSFS_IMG_FILE =
+const QString ANDROID0_SYSFS_IMG_FILE =
         QStringLiteral("/sys/devices/virtual/android_usb/android0/f_mass_storage/lun/file");
-
-const QString PROPERTY_SERVICE_PATH =
-        QStringLiteral("/com/canonical/PropertyService");
-const QString PROPERTY_SERVICE_OBJ =
-        QStringLiteral("com.canonical.PropertyService");
 
 UtIsoManager::UtIsoManager(QObject *parent) :
     GenericIsoManager(parent),
@@ -57,7 +55,7 @@ void UtIsoManager::enableISO(const QString& fileName, const bool enableSharing)
         setEnabled(false);
 
     const QByteArray selectedIso = fileName.toUtf8();
-    this->m_commandRunner->writeFile(SYSFS_IMG_FILE, selectedIso);
+    this->m_commandRunner->writeFile(ANDROID0_SYSFS_IMG_FILE, selectedIso);
     emit selectedISOChanged();
 
     QByteArray features = "mass_storage";
@@ -65,9 +63,9 @@ void UtIsoManager::enableISO(const QString& fileName, const bool enableSharing)
         features += ",mtp";
     }
     features += "\n";
-    this->m_commandRunner->writeFile(SYSFS_FEATURES, features);
+    this->m_commandRunner->writeFile(ANDROID0_SYSFS_FEATURES, features);
 
-    const QByteArray finalSelectedIso = this->m_commandRunner->readFile(SYSFS_IMG_FILE);
+    const QByteArray finalSelectedIso = this->m_commandRunner->readFile(ANDROID0_SYSFS_IMG_FILE);
     if(selectedIso != finalSelectedIso) {
         emit selectionFailed();
     }
@@ -94,25 +92,25 @@ void UtIsoManager::resetISO()
     }
     features += "\n";
 
-    this->m_commandRunner->writeFile(SYSFS_FEATURES, features);
+    this->m_commandRunner->writeFile(ANDROID0_SYSFS_FEATURES, features);
     setEnabled(true);
 }
 
 bool UtIsoManager::enabled()
 {
-    const QString content = this->m_commandRunner->readFile(SYSFS_ENABLE);
+    const QString content = this->m_commandRunner->readFile(ANDROID0_SYSFS_ENABLE);
     const bool ret = content.startsWith("1");
     return ret;
 }
 
 void UtIsoManager::setEnabled(bool enabled)
 {
-    this->m_commandRunner->writeFile(SYSFS_ENABLE, enabled ? "1\n" : "0\n");
+    this->m_commandRunner->writeFile(ANDROID0_SYSFS_ENABLE, enabled ? "1\n" : "0\n");
 }
 
 QString UtIsoManager::getSelectedISOPath()
 {
-    const QByteArray path = this->m_commandRunner->readFile(SYSFS_IMG_FILE);
+    const QByteArray path = this->m_commandRunner->readFile(ANDROID0_SYSFS_IMG_FILE);
     QString content = QString::fromUtf8(path);
     QString fileName = content;
     fileName = fileName.replace("\n", "");

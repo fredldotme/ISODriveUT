@@ -14,6 +14,10 @@ public:
     void sudo(const QStringList& command);
     QByteArray readFile(const QString& absolutePath);
     bool writeFile(const QString& absolutePath, const QByteArray& value);
+    bool mkDir(const QString& absolutePath);
+    bool ln(const QString& source, const QString& newTarget);
+    QString getConfigFsMountPoint();
+    QString getUDCController();
 
 public slots:
     bool validatePassword();

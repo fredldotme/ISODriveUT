@@ -75,13 +75,16 @@ SOURCES += \
     $$PWD/src/ISODrive.cpp \
     $$PWD/src/filemanager.cpp \
     $$PWD/src/commandrunner.cpp \
-    $$PWD/src/utisomanager.cpp
+    $$PWD/src/utisomanager.cpp \
+    $$PWD/src/configfsisomanager.cpp
 
 HEADERS += \
     $$PWD/src/filemanager.h \
     $$PWD/src/genericisomanager.h \
     $$PWD/src/commandrunner.h \
-    $$PWD/src/utisomanager.h
+    $$PWD/src/utisomanager.h \
+    $$PWD/src/common.h \
+    $$PWD/src/configfsisomanager.h
 
 RESOURCES += \
     qml-ut.qrc

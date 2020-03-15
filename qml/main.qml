@@ -38,7 +38,7 @@ ApplicationWindow {
             Action {
                 text: qsTr("Settings")
                 iconName: "settings"
-                enabled: !hasLoadedIso && !settingsDialogOpen
+                enabled: hasSettings && !hasLoadedIso && !settingsDialogOpen
                 onTriggered: {
                     PopupUtils.open(settingsDialog)
                     settingsDialogOpen = true
