@@ -4,6 +4,7 @@
 #include <QQmlContext>
 #include <QTranslator>
 
+#include "common.h"
 #include "filemanager.h"
 #include "utisomanager.h"
 #include "configfsisomanager.h"
@@ -17,6 +18,7 @@ enum UsbType {
 static UsbType getUsbGadgetType()
 {
     const UsbType defaultType = ANDROID0;
+    bool hasConfigFs = false;
 
     QFile filesystems(QStringLiteral("/proc/filesystems"));
     if (!filesystems.open(QFile::ReadOnly)) {
@@ -37,9 +39,14 @@ static UsbType getUsbGadgetType()
             continue;
 
         if (lineSplit[0] == QStringLiteral("nodev") &&
-                lineSplit[1] == QStringLiteral("configfs"))
-            return CONFIGFS;
+                lineSplit[1] == QStringLiteral("configfs")) {
+            hasConfigFs = true;
+            break;
+        }
     }
+
+    if (hasConfigFs && !QFile(ANDROID0_SYSFS_IMG_FILE).exists())
+        return CONFIGFS;
 
     return defaultType;
 }

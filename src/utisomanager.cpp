@@ -6,14 +6,6 @@
 #include <QFile>
 #include <QString>
 
-// Constants for android0 interface support
-const QString ANDROID0_SYSFS_ENABLE =
-        QStringLiteral("/sys/devices/virtual/android_usb/android0/enable");
-const QString ANDROID0_SYSFS_FEATURES =
-        QStringLiteral("/sys/devices/virtual/android_usb/android0/functions");
-const QString ANDROID0_SYSFS_IMG_FILE =
-        QStringLiteral("/sys/devices/virtual/android_usb/android0/f_mass_storage/lun/file");
-
 UtIsoManager::UtIsoManager(QObject *parent) :
     GenericIsoManager(parent),
     m_commandRunner(new CommandRunner(this)),
