@@ -14,21 +14,17 @@ FileManager::FileManager(QObject *parent) : QObject(parent)
 void FileManager::refresh()
 {
     QVariantList foundFiles;
-    QDirIterator iterator(QStandardPaths::writableLocation(QStandardPaths::DownloadLocation));
+    QDirIterator iterator(QStandardPaths::writableLocation(QStandardPaths::DownloadLocation), 
+        QStringList() << "*.iso", QDir::Files, QDirIterator::Subdirectories);
 
     while (iterator.hasNext()) {
-        const QString filePath = iterator.next();
-        const QFileInfo fileInfo(filePath);
-        const QString loweredFileName = filePath.toLower();
+        iterator.next();
 
-        if (!loweredFileName.endsWith(".iso"))
-            continue;
-
-        qDebug() << filePath << "matches";
+        qDebug() << iterator.filePath() << "matches";
         QVariantMap foundFileInfo;
 
-        foundFileInfo.insert("name", fileInfo.fileName());
-        foundFileInfo.insert("path", fileInfo.absoluteFilePath());
+        foundFileInfo.insert("name", iterator.fileName());
+        foundFileInfo.insert("path", iterator.filePath());
 
         qDebug() << foundFileInfo;
         foundFiles.push_back(foundFileInfo);
