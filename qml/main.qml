@@ -92,7 +92,7 @@ ApplicationWindow {
             }
             Button {
                 text: qsTr("Cancel")
-                color: UbuntuColors.red
+                //color: UbuntuColors.red
                 enabled: !enterDelayTimer.running
                 onClicked: {
                     PopupUtils.close(dialogue)
