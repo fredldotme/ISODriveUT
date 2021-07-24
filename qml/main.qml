@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.0
 import Qt.labs.settings 1.0
 import Ubuntu.Components 1.3
 import Ubuntu.Components.Popups 1.3
+import Ubuntu.Components.Themes 1.3
 
 ApplicationWindow {
     id: window
@@ -77,7 +78,8 @@ ApplicationWindow {
             }
             Button {
                 text: qsTr("Ok")
-                color: UbuntuColors.green
+                color: theme.palette.normal.positive
+
                 enabled: !enterDelayTimer.running
                 onClicked: {
                     isoManager.userPassword = entry.text
@@ -92,7 +94,6 @@ ApplicationWindow {
             }
             Button {
                 text: qsTr("Cancel")
-                //color: UbuntuColors.red
                 enabled: !enterDelayTimer.running
                 onClicked: {
                     PopupUtils.close(dialogue)
@@ -122,7 +123,8 @@ ApplicationWindow {
 
             Button {
                 text: qsTr("Ok")
-                color: UbuntuColors.green
+                color: theme.palette.normal.positive
+
                 onClicked: {
                     PopupUtils.close(settingsDialogue)
                     settingsDialogOpen = false
