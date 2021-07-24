@@ -1,5 +1,5 @@
 {
-  "template": "qmake",
+  "builder": "qmake",
   "kill": "ISODrive",
   "default": "clean build click-build",
   "make_jobs": 4
