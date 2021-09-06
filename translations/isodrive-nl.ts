@@ -11,7 +11,7 @@
     <message>
         <location filename="../qml/main.qml" line="24"/>
         <source>ISODrive</source>
-        <translation type="unfinished"></translation>
+        <translation>ISODrive</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="26"/>
@@ -31,7 +31,7 @@
         <location filename="../qml/main.qml" line="39"/>
         <location filename="../qml/main.qml" line="112"/>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Instellingen</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="61"/>
@@ -41,18 +41,18 @@
     <message>
         <location filename="../qml/main.qml" line="62"/>
         <source>Please enter your user PIN or password to continue:</source>
-        <translation>Voer uw gebruikerspincode of wachtwoord in om verder te gaan:</translation>
+        <translation>Voer je gebruikerspincode of wachtwoord in om verder te gaan:</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="73"/>
         <source>PIN or password</source>
-        <translation>PIN of wachtwoord</translation>
+        <translation>Pincode of wachtwoord</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="79"/>
         <location filename="../qml/main.qml" line="124"/>
         <source>Ok</source>
-        <translation type="unfinished">Oké</translation>
+        <translation>Oké</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="94"/>
@@ -62,12 +62,12 @@
     <message>
         <location filename="../qml/main.qml" line="116"/>
         <source>Enable MTP while using ISODrive</source>
-        <translation type="unfinished"></translation>
+        <translation>MTP inschakelen tijdens gebruik van ISODrive</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="207"/>
         <source>No .iso files found in the &apos;Downloads&apos; folder. Download a hybrid ISO file to continue.</source>
-        <translation>Geen .iso-bestanden gevonden in de map &apos;Downloads&apos;. Download een hybride ISO-bestand om verder te gaan.</translation>
+        <translation>Geen .iso-bestanden aangetroffen in de map ‘Downloads’. Download een hybride iso-bestand om verder te gaan.</translation>
     </message>
 </context>
 </TS>
