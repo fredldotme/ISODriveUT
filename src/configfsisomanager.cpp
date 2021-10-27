@@ -110,7 +110,7 @@ void ConfigFSIsoManager::enableISO(const QString& fileName, const bool enableSha
     }
 
     this->m_commandRunner->writeFile(lunFile, selectedIso);
-    this->m_commandRunner->writeFile(lunCdRom, "1");
+    this->m_commandRunner->writeFile(lunCdRom, "0");
     this->m_commandRunner->writeFile(lunRo, "1");
 
     setUDC();
