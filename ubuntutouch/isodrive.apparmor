@@ -12,5 +12,5 @@
         "/sys/devices/virtual/android_usb/android0/f_mass_storage/lun/file"
      ],
     "template" : "unconfined",
-    "policy_version": 16.04
+    "policy_version": 20.04
 }
