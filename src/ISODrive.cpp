@@ -74,7 +74,9 @@ int main(int argc, char *argv[])
         break;
     }
 
+#if 0
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
     QGuiApplication* app = new QGuiApplication(argc, argv);
     app->setApplicationName(QStringLiteral("me.fredl.isodrive"));
     QQmlApplicationEngine* engine = new QQmlApplicationEngine(app);
