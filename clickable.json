@@ -2,5 +2,6 @@
   "builder": "qmake",
   "kill": "ISODrive",
   "default": "clean build click-build",
-  "make_jobs": 4
+  "make_jobs": 4,
+  "framework": "20.04"
 }
