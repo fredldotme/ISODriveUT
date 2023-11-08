@@ -1,7 +1,7 @@
 {
     "name": "me.fredl.isodrive",
     "title": "ISODrive",
-    "version": "0.7.1",
+    "version": "0.7.2",
     "description": "Boot GNU/Linux distributions from off your Ubuntu Touch device",
     "architecture": "@CLICK_ARCH@",
     "framework": "ubuntu-sdk-20.04",
