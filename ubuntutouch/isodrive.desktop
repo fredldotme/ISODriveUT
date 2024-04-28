@@ -4,4 +4,4 @@ Icon=isodrive.png
 Exec=run.sh
 Name=ISODrive
 X-Ubuntu-Touch=true
-X-Ubuntu-Splash-Color=#F5F5F5
+X-Ubuntu-Splash-Color=#2aafb3
