@@ -2,9 +2,12 @@
 
 #include <QFile>
 #include <QFileInfo>
+#include <QDir>
 #include <QDirIterator>
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
+#include <QStandardPaths>
+#include <QStringList>
 #include <unistd.h>
 
 FileManager::FileManager(QObject *parent) : QObject(parent)
@@ -14,20 +17,34 @@ FileManager::FileManager(QObject *parent) : QObject(parent)
 void FileManager::refresh()
 {
     QVariantList foundFiles;
-    QDirIterator iterator(QStandardPaths::writableLocation(QStandardPaths::DownloadLocation), 
-        QStringList() << "*.iso", QDir::Files, QDirIterator::Subdirectories);
+    const QString downloadsPath = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation);
+    const QString documentsPath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    const QStringList searchPaths = QStringList()
+        << downloadsPath
+        << QDir(documentsPath).filePath("iso")
+        << QDir(documentsPath).filePath("flashdrive");
+    const QStringList nameFilters = QStringList() << "*.iso" << "*.img";
 
-    while (iterator.hasNext()) {
-        iterator.next();
+    for (const QString &path : searchPaths) {
+        QDir dir(path);
+        if (!dir.exists()) {
+            continue;
+        }
 
-        qDebug() << iterator.filePath() << "matches";
-        QVariantMap foundFileInfo;
+        QDirIterator iterator(dir.absolutePath(), nameFilters, QDir::Files, QDirIterator::Subdirectories);
 
-        foundFileInfo.insert("name", iterator.fileName());
-        foundFileInfo.insert("path", iterator.filePath());
+        while (iterator.hasNext()) {
+            iterator.next();
 
-        qDebug() << foundFileInfo;
-        foundFiles.push_back(foundFileInfo);
+            qDebug() << iterator.filePath() << "matches";
+            QVariantMap foundFileInfo;
+
+            foundFileInfo.insert("name", iterator.fileName());
+            foundFileInfo.insert("path", iterator.filePath());
+
+            qDebug() << foundFileInfo;
+            foundFiles.push_back(foundFileInfo);
+        }
     }
 
     this->m_foundFiles = foundFiles;
