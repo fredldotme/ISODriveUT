@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.0
 import Qt.labs.settings 1.0
+import QtQml 2.2
 import Lomiri.Components 1.3
 import Lomiri.Components.Popups 1.3
 import Lomiri.Components.Themes 1.3
@@ -51,6 +52,7 @@ ApplicationWindow {
     Settings {
         id: settings
         property bool enableMtp : false
+        property bool includeImgFiles : false
     }
 
     // First start password entry
@@ -112,12 +114,53 @@ ApplicationWindow {
             id: settingsDialogue
             title: qsTr("Settings")
 
-            CheckBox {
-                id: mtpCheckBox
-                text: qsTr("Enable MTP while using ISODrive")
-                checked: settings.enableMtp
-                onCheckedChanged: {
-                    settings.enableMtp = checked
+            Column {
+                spacing: units.gu(2)
+                
+                CheckBox {
+                    id: mtpCheckBox
+                    text: qsTr("Enable MTP while using ISODrive")
+                    checked: settings.enableMtp
+                    onCheckedChanged: {
+                        settings.enableMtp = checked
+                    }
+                }
+
+                CheckBox {
+                    id: imgCheckBox
+                    text: qsTr("Include .img files (USB drive images)")
+                    checked: settings.includeImgFiles
+                    onCheckedChanged: {
+                        settings.includeImgFiles = checked
+                        fileManager.setIncludeImgFiles(checked)
+                    }
+                }
+
+                Label {
+                    text: qsTr("Custom search paths:")
+                    font.bold: true
+                }
+
+                Button {
+                    text: qsTr("Add /documents/iso path")
+                    onClicked: {
+                        fileManager.addCustomPath("/documents/iso")
+                    }
+                }
+
+                Button {
+                    text: qsTr("Add /documents/flashdrive path")
+                    onClicked: {
+                        fileManager.addCustomPath("/documents/flashdrive")
+                    }
+                }
+
+                Button {
+                    text: qsTr("Add custom path...")
+                    onClicked: {
+                        // For now, add a default path - could be extended with input dialog
+                        fileManager.addCustomPath(QStandardPaths.standardLocations(QStandardPaths.DocumentsLocation)[0] + "/custom")
+                    }
                 }
             }
 
@@ -150,13 +193,14 @@ ApplicationWindow {
                 id: listItem
                 readonly property string name : isoList.model[index].name
                 readonly property string path : isoList.model[index].path
+                readonly property string type : isoList.model[index].type
                 readonly property bool isoEnabled : isoManager.selectedISO === name
 
                 width: parent.width
                 height: units.gu(8)
 
                 RadioButton {
-                    text: listItem.name
+                    text: listItem.name + (listItem.type ? " (." + listItem.type + ")" : "")
                     font.pixelSize: units.gu(2)
                     checked: listItem.isoEnabled
                     anchors.fill: parent
@@ -206,8 +250,8 @@ ApplicationWindow {
         horizontalAlignment: Qt.AlignHCenter
         verticalAlignment: Qt.AlignVCenter
         wrapMode: Label.WrapAtWordBoundaryOrAnywhere
-        text: qsTr("No .iso files found in the 'Downloads' folder. " +
-                   "Download a hybrid ISO file to continue.")
+        text: qsTr("No .iso or .img files found. " +
+                   "Download a hybrid ISO file or place .img files in your search paths to continue.")
         visible: isoList.count < 1
         font.pixelSize: units.gu(3)
     }
