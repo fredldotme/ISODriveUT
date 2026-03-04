@@ -3,8 +3,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QDirIterator>
-#include <QRegularExpression>
-#include <QRegularExpressionMatch>
+#include <QSet>
 #include <unistd.h>
 
 FileManager::FileManager(QObject *parent) : QObject(parent)
@@ -14,20 +13,38 @@ FileManager::FileManager(QObject *parent) : QObject(parent)
 void FileManager::refresh()
 {
     QVariantList foundFiles;
-    QDirIterator iterator(QStandardPaths::writableLocation(QStandardPaths::DownloadLocation), 
-        QStringList() << "*.iso", QDir::Files, QDirIterator::Subdirectories);
+    QSet<QString> seenPaths;
 
-    while (iterator.hasNext()) {
-        iterator.next();
+    const QStringList roots = searchRoots();
+    for (const QString& root : roots) {
+        const QDir rootDir(root);
+        if (!rootDir.exists()) {
+            qDebug() << "Skipping missing directory:" << root;
+            continue;
+        }
 
-        qDebug() << iterator.filePath() << "matches";
-        QVariantMap foundFileInfo;
+        QDirIterator iterator(root,
+                              QDir::Files,
+                              QDirIterator::Subdirectories);
 
-        foundFileInfo.insert("name", iterator.fileName());
-        foundFileInfo.insert("path", iterator.filePath());
+        while (iterator.hasNext()) {
+            iterator.next();
+            if (!isBootImageFile(iterator.fileName())) {
+                continue;
+            }
 
-        qDebug() << foundFileInfo;
-        foundFiles.push_back(foundFileInfo);
+            const QString absolutePath = iterator.filePath();
+            if (seenPaths.contains(absolutePath)) {
+                continue;
+            }
+            seenPaths.insert(absolutePath);
+
+            qDebug() << absolutePath << "matches";
+            QVariantMap foundFileInfo;
+            foundFileInfo.insert("name", iterator.fileName());
+            foundFileInfo.insert("path", absolutePath);
+            foundFiles.push_back(foundFileInfo);
+        }
     }
 
     this->m_foundFiles = foundFiles;
@@ -45,4 +62,26 @@ bool FileManager::removeFile(const QString &filePath)
     const bool ret = QFile::remove(absolutePath);
     sync();
     return ret;
+}
+
+QStringList FileManager::searchRoots() const
+{
+    const QString downloadsPath = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation);
+    const QString documentsPath = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+
+    QStringList roots;
+    roots << downloadsPath;
+
+    if (!documentsPath.isEmpty()) {
+        roots << QDir(documentsPath).filePath("iso");
+        roots << QDir(documentsPath).filePath("flashdrive");
+    }
+
+    return roots;
+}
+
+bool FileManager::isBootImageFile(const QString &fileName)
+{
+    const QString lowerName = fileName.toLower();
+    return lowerName.endsWith(".iso") || lowerName.endsWith(".img");
 }

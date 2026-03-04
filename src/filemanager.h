@@ -21,6 +21,9 @@ private:
     QVariantList foundFiles();
     QVariantList m_foundFiles;
 
+    QStringList searchRoots() const;
+    static bool isBootImageFile(const QString& fileName);
+
 signals:
     void foundFilesChanged();
 
