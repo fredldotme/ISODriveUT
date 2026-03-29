@@ -24,7 +24,14 @@ ApplicationWindow {
         visible: !(dialogIsOpen || settingsDialogOpen)
         title: qsTr("ISODrive")
 
-        subtitle: qsTr("Active: %1").arg(activeIso)
+        subtitle: {
+            if (isoManager.usbActive && hasLoadedIso)
+                return qsTr("USB: Mass Storage | Active: %1").arg(activeIso)
+            else if (isoManager.usbActive)
+                return qsTr("USB: Mass Storage Active")
+            else
+                return qsTr("Active: %1").arg(activeIso)
+        }
 
         trailingActionBar.actions: [
             Action {

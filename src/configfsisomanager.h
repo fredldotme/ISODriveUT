@@ -11,6 +11,7 @@ class ConfigFSIsoManager : public GenericIsoManager
     Q_OBJECT
     Q_PROPERTY(QString userPassword READ userPassword WRITE setUserPassword NOTIFY userPasswordChanged)
     Q_PROPERTY(QString selectedISO READ getSelectedISO NOTIFY selectedISOChanged)
+    Q_PROPERTY(bool usbActive READ isUsbActive NOTIFY usbActiveChanged)
 
 public:
     explicit ConfigFSIsoManager(QObject *parent = nullptr);
@@ -19,6 +20,8 @@ public:
     Q_INVOKABLE bool isEnabledISO(QString fileName) Q_DECL_OVERRIDE;
     Q_INVOKABLE void resetISO() Q_DECL_OVERRIDE;
     Q_INVOKABLE bool validatePassword();
+    Q_INVOKABLE bool isUsbActive();
+    Q_INVOKABLE void setUsbActive(bool active);
 
 private:
     QString userPassword();
@@ -38,6 +41,7 @@ signals:
     void selectedISOChanged();
     void selectionFailed();
     void userPasswordChanged();
+    void usbActiveChanged();
 
 };
 

@@ -116,3 +116,15 @@ QString UtIsoManager::getSelectedISO()
     fileName = fileName.replace("\n", "");
     return fileName.trimmed();
 }
+
+bool UtIsoManager::isUsbActive()
+{
+    return enabled();
+}
+
+void UtIsoManager::setUsbActive(bool active)
+{
+    setEnabled(active);
+    emit usbActiveChanged();
+}
+
