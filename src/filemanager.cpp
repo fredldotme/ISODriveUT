@@ -5,6 +5,7 @@
 #include <QDirIterator>
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
+#include <QSet>
 #include <unistd.h>
 
 FileManager::FileManager(QObject *parent) : QObject(parent)
@@ -14,20 +15,35 @@ FileManager::FileManager(QObject *parent) : QObject(parent)
 void FileManager::refresh()
 {
     QVariantList foundFiles;
-    QDirIterator iterator(QStandardPaths::writableLocation(QStandardPaths::DownloadLocation), 
-        QStringList() << "*.iso", QDir::Files, QDirIterator::Subdirectories);
+    const QStringList roots = {
+        QStandardPaths::writableLocation(QStandardPaths::DownloadLocation),
+        QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + QStringLiteral("/iso"),
+        QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + QStringLiteral("/flashdrive")
+    };
 
-    while (iterator.hasNext()) {
-        iterator.next();
+    QSet<QString> seen;
+    for (const QString &root : roots) {
+        if (root.isEmpty() || !QDir(root).exists())
+            continue;
 
-        qDebug() << iterator.filePath() << "matches";
-        QVariantMap foundFileInfo;
+        QDirIterator iterator(root, QDir::Files, QDirIterator::Subdirectories);
+        while (iterator.hasNext()) {
+            iterator.next();
 
-        foundFileInfo.insert("name", iterator.fileName());
-        foundFileInfo.insert("path", iterator.filePath());
+            const QFileInfo info(iterator.filePath());
+            const QString suffix = info.suffix().toLower();
+            if (suffix != QStringLiteral("iso") && suffix != QStringLiteral("img"))
+                continue;
+            if (seen.contains(info.canonicalFilePath()))
+                continue;
+            seen.insert(info.canonicalFilePath());
 
-        qDebug() << foundFileInfo;
-        foundFiles.push_back(foundFileInfo);
+            qDebug() << iterator.filePath() << "matches";
+            QVariantMap foundFileInfo;
+            foundFileInfo.insert("name", iterator.fileName());
+            foundFileInfo.insert("path", iterator.filePath());
+            foundFiles.push_back(foundFileInfo);
+        }
     }
 
     this->m_foundFiles = foundFiles;
