@@ -4,6 +4,12 @@
     "read_path": [
         "@{HOME}/Downloads",
         "@{HOME}/Downloads/*",
+        "@{HOME}/Documents",
+        "@{HOME}/Documents/*",
+        "@{HOME}/Documents/iso",
+        "@{HOME}/Documents/iso/*",
+        "@{HOME}/Documents/flashdrive",
+        "@{HOME}/Documents/flashdrive/*",
         "/sys/devices/virtual/android_usb/android0/enable",
         "/sys/devices/virtual/android_usb/android0/f_mass_storage/lun/file"
     ],
