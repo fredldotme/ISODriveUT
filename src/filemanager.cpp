@@ -3,6 +3,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QDirIterator>
+#include <QSet>
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
 #include <unistd.h>
@@ -11,24 +12,41 @@ FileManager::FileManager(QObject *parent) : QObject(parent)
 {
 }
 
-void FileManager::refresh()
+static void scanForDiskImages(const QString &basePath, QVariantList &foundFiles, QSet<QString> &seenPaths)
 {
-    QVariantList foundFiles;
-    QDirIterator iterator(QStandardPaths::writableLocation(QStandardPaths::DownloadLocation), 
-        QStringList() << "*.iso", QDir::Files, QDirIterator::Subdirectories);
+    if (basePath.isEmpty() || !QDir(basePath).exists()) {
+        return;
+    }
 
+    QDirIterator iterator(basePath, QDir::Files, QDirIterator::Subdirectories);
     while (iterator.hasNext()) {
         iterator.next();
 
-        qDebug() << iterator.filePath() << "matches";
+        const QString filePath = iterator.filePath();
+        const QString suffix = QFileInfo(filePath).suffix().toLower();
+        if (suffix != QStringLiteral("iso") && suffix != QStringLiteral("img")) {
+            continue;
+        }
+        if (seenPaths.contains(filePath)) {
+            continue;
+        }
+
+        seenPaths.insert(filePath);
+
         QVariantMap foundFileInfo;
-
         foundFileInfo.insert("name", iterator.fileName());
-        foundFileInfo.insert("path", iterator.filePath());
-
-        qDebug() << foundFileInfo;
+        foundFileInfo.insert("path", filePath);
         foundFiles.push_back(foundFileInfo);
     }
+}
+
+void FileManager::refresh()
+{
+    QVariantList foundFiles;
+    QSet<QString> seenPaths;
+    scanForDiskImages(QStandardPaths::writableLocation(QStandardPaths::DownloadLocation), foundFiles, seenPaths);
+    scanForDiskImages(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/iso", foundFiles, seenPaths);
+    scanForDiskImages(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/flashdrive", foundFiles, seenPaths);
 
     this->m_foundFiles = foundFiles;
     emit foundFilesChanged();
