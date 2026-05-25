@@ -51,6 +51,7 @@ ApplicationWindow {
     Settings {
         id: settings
         property bool enableMtp : false
+        property string extraSearchPaths : ""
     }
 
     // First start password entry
@@ -126,9 +127,24 @@ ApplicationWindow {
                 color: theme.palette.normal.positive
 
                 onClicked: {
+                    fileManager.searchPaths = buildSearchPaths(settings.extraSearchPaths)
+                    fileManager.refresh()
                     PopupUtils.close(settingsDialogue)
                     settingsDialogOpen = false
                 }
+            }
+
+            TextArea {
+                width: parent.width
+                placeholderText: qsTr("Extra scan paths")
+                text: settings.extraSearchPaths
+                onTextChanged: settings.extraSearchPaths = text
+            }
+
+            Label {
+                width: parent.width
+                text: qsTr("One path per line, or separate with commas.")
+                wrapMode: Text.WordWrap
             }
         }
     }
@@ -206,17 +222,34 @@ ApplicationWindow {
         horizontalAlignment: Qt.AlignHCenter
         verticalAlignment: Qt.AlignVCenter
         wrapMode: Label.WrapAtWordBoundaryOrAnywhere
-        text: qsTr("No .iso files found in the 'Downloads' folder. " +
-                   "Download a hybrid ISO file to continue.")
+        text: qsTr("No .iso or .img files found in the configured folders. " +
+                   "Download a hybrid ISO/IMG file to continue.")
         visible: isoList.count < 1
         font.pixelSize: units.gu(3)
     }
 
     function refreshList() {
+        fileManager.searchPaths = buildSearchPaths(settings.extraSearchPaths)
         fileManager.refresh()
     }
 
+    function buildSearchPaths(raw) {
+        var paths = ["/home/phablet/Downloads"]
+        if (!raw || raw.length === 0) {
+            return paths
+        }
+
+        var parts = raw.split(/[\n,;]+/)
+        for (var i = 0; i < parts.length; ++i) {
+            var path = parts[i].trim()
+            if (path.length > 0)
+                paths.push(path)
+        }
+        return paths
+    }
+
     Component.onCompleted: {
+        fileManager.searchPaths = buildSearchPaths(settings.extraSearchPaths)
         dialogIsOpen = true
         PopupUtils.open(dialog)
     }
