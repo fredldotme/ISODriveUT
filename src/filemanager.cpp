@@ -3,6 +3,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QDirIterator>
+#include <QStandardPaths>
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
 #include <unistd.h>
@@ -14,20 +15,29 @@ FileManager::FileManager(QObject *parent) : QObject(parent)
 void FileManager::refresh()
 {
     QVariantList foundFiles;
-    QDirIterator iterator(QStandardPaths::writableLocation(QStandardPaths::DownloadLocation), 
-        QStringList() << "*.iso", QDir::Files, QDirIterator::Subdirectories);
+    const QStringList scanRoots = {
+        QStandardPaths::writableLocation(QStandardPaths::DownloadLocation),
+        QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + QStringLiteral("/iso"),
+        QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + QStringLiteral("/flashdrive")
+    };
+    const QStringList filters = { QStringLiteral("*.iso"), QStringLiteral("*.img") };
 
-    while (iterator.hasNext()) {
-        iterator.next();
+    for (const QString &root : scanRoots) {
+        if (root.isEmpty())
+            continue;
+        QDirIterator iterator(root, filters, QDir::Files, QDirIterator::Subdirectories);
+        while (iterator.hasNext()) {
+            iterator.next();
 
-        qDebug() << iterator.filePath() << "matches";
-        QVariantMap foundFileInfo;
+            qDebug() << iterator.filePath() << "matches";
+            QVariantMap foundFileInfo;
 
-        foundFileInfo.insert("name", iterator.fileName());
-        foundFileInfo.insert("path", iterator.filePath());
+            foundFileInfo.insert("name", iterator.fileName());
+            foundFileInfo.insert("path", iterator.filePath());
 
-        qDebug() << foundFileInfo;
-        foundFiles.push_back(foundFileInfo);
+            qDebug() << foundFileInfo;
+            foundFiles.push_back(foundFileInfo);
+        }
     }
 
     this->m_foundFiles = foundFiles;
