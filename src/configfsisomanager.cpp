@@ -6,6 +6,7 @@
 #include <QDirIterator>
 #include <QDBusReply>
 #include <QFileInfo>
+#include <QString>
 
 ConfigFSIsoManager::ConfigFSIsoManager(QObject *parent) :
     GenericIsoManager(parent),
@@ -97,6 +98,7 @@ void ConfigFSIsoManager::enableISO(const QString& fileName, const bool enableSha
     const QString lunRo = lunRoot + QStringLiteral("/ro");
 
     const QByteArray selectedIso = fileName.toUtf8();
+    const bool isDiskImage = fileName.endsWith(QStringLiteral(".img"), Qt::CaseInsensitive);
 
     resetUDC();
 
@@ -111,7 +113,7 @@ void ConfigFSIsoManager::enableISO(const QString& fileName, const bool enableSha
 
     this->m_commandRunner->writeFile(lunFile, selectedIso);
     this->m_commandRunner->writeFile(lunCdRom, "0");
-    this->m_commandRunner->writeFile(lunRo, "1");
+    this->m_commandRunner->writeFile(lunRo, isDiskImage ? "0" : "1");
 
     setUDC();
 
