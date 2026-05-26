@@ -206,8 +206,8 @@ ApplicationWindow {
         horizontalAlignment: Qt.AlignHCenter
         verticalAlignment: Qt.AlignVCenter
         wrapMode: Label.WrapAtWordBoundaryOrAnywhere
-        text: qsTr("No .iso files found in the 'Downloads' folder. " +
-                   "Download a hybrid ISO file to continue.")
+        text: qsTr("No .iso/.img files found in Downloads, Documents/iso, or Documents/flashdrive. " +
+                   "Add a hybrid ISO or disk image to continue.")
         visible: isoList.count < 1
         font.pixelSize: units.gu(3)
     }
