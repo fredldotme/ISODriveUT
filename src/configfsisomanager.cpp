@@ -145,7 +145,37 @@ bool ConfigFSIsoManager::isEnabledISO(const QString absolutePath)
 
 void ConfigFSIsoManager::resetISO()
 {
-    enableISO("");
+    const QString gadgetRoot = getGadgetRoot();
+    const QString functionRoot = gadgetRoot + QStringLiteral("/functions");
+    const QString massStorageRoot = functionRoot + QStringLiteral("/mass_storage.0");
+    const QString lunRoot = massStorageRoot + QStringLiteral("/lun.0");
+    const QString lunFile = lunRoot + QStringLiteral("/file");
+
+    resetUDC();
+
+    // Clear the LUN file to release the ISO
+    this->m_commandRunner->writeFile(lunFile, QByteArrayLiteral(""));
+    this->m_commandRunner->writeFile(massStorageRoot + QStringLiteral("/stall"), QByteArrayLiteral("0"));
+
+    emit selectedISOChanged();
+}
+
+bool ConfigFSIsoManager::isUsbActive()
+{
+    const QString gadgetRoot = getGadgetRoot();
+    const QString udcFile = gadgetRoot + QStringLiteral("/UDC");
+    const QByteArray udcContent = this->m_commandRunner->readFile(udcFile);
+    return !QString::fromUtf8(udcContent).trimmed().isEmpty();
+}
+
+void ConfigFSIsoManager::setUsbActive(bool active)
+{
+    if (active) {
+        setUDC();
+    } else {
+        resetUDC();
+    }
+    emit usbActiveChanged();
 }
 
 QString ConfigFSIsoManager::getSelectedISOPath()
