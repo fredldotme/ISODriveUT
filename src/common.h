@@ -16,5 +16,9 @@ const QString ANDROID0_SYSFS_FEATURES =
         QStringLiteral("/sys/devices/virtual/android_usb/android0/functions");
 const QString ANDROID0_SYSFS_IMG_FILE =
         QStringLiteral("/sys/devices/virtual/android_usb/android0/f_mass_storage/lun/file");
+const QString ANDROID0_SYSFS_IMG_RO =
+        QStringLiteral("/sys/devices/virtual/android_usb/android0/f_mass_storage/lun/ro");
+const QString ANDROID0_SYSFS_IMG_CDROM =
+        QStringLiteral("/sys/devices/virtual/android_usb/android0/f_mass_storage/lun/cdrom");
 
 #endif // COMMON_H

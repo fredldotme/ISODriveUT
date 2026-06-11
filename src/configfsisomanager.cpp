@@ -97,6 +97,8 @@ void ConfigFSIsoManager::enableISO(const QString& fileName, const bool enableSha
     const QString lunRo = lunRoot + QStringLiteral("/ro");
 
     const QByteArray selectedIso = fileName.toUtf8();
+    const QString suffix = QFileInfo(fileName).suffix();
+    const bool writableDiskImage = suffix.compare(QStringLiteral("img"), Qt::CaseInsensitive) == 0;
 
     resetUDC();
 
@@ -111,7 +113,7 @@ void ConfigFSIsoManager::enableISO(const QString& fileName, const bool enableSha
 
     this->m_commandRunner->writeFile(lunFile, selectedIso);
     this->m_commandRunner->writeFile(lunCdRom, "0");
-    this->m_commandRunner->writeFile(lunRo, "1");
+    this->m_commandRunner->writeFile(lunRo, writableDiskImage ? "0" : "1");
 
     setUDC();
 
