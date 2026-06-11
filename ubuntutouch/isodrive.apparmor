@@ -4,12 +4,20 @@
     "read_path": [
         "@{HOME}/Downloads",
         "@{HOME}/Downloads/*",
+        "@{HOME}/Documents/iso",
+        "@{HOME}/Documents/iso/*",
+        "@{HOME}/Documents/flashdrive",
+        "@{HOME}/Documents/flashdrive/*",
         "/sys/devices/virtual/android_usb/android0/enable",
-        "/sys/devices/virtual/android_usb/android0/f_mass_storage/lun/file"
+        "/sys/devices/virtual/android_usb/android0/f_mass_storage/lun/file",
+        "/sys/devices/virtual/android_usb/android0/f_mass_storage/lun/ro",
+        "/sys/devices/virtual/android_usb/android0/f_mass_storage/lun/cdrom"
     ],
     "write_path": [
         "/sys/devices/virtual/android_usb/android0/enable",
-        "/sys/devices/virtual/android_usb/android0/f_mass_storage/lun/file"
+        "/sys/devices/virtual/android_usb/android0/f_mass_storage/lun/file",
+        "/sys/devices/virtual/android_usb/android0/f_mass_storage/lun/ro",
+        "/sys/devices/virtual/android_usb/android0/f_mass_storage/lun/cdrom"
      ],
     "template" : "unconfined",
     "policy_version": 20.04

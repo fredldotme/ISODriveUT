@@ -4,6 +4,7 @@
 #include <QDBusReply>
 #include <QDebug>
 #include <QFile>
+#include <QFileInfo>
 #include <QString>
 
 UtIsoManager::UtIsoManager(QObject *parent) :
@@ -47,6 +48,16 @@ void UtIsoManager::enableISO(const QString& fileName, const bool enableSharing)
         setEnabled(false);
 
     const QByteArray selectedIso = fileName.toUtf8();
+    const QString suffix = QFileInfo(fileName).suffix();
+    const bool writableDiskImage = suffix.compare(QStringLiteral("img"), Qt::CaseInsensitive) == 0;
+
+    if (writableDiskImage && QFileInfo::exists(ANDROID0_SYSFS_IMG_CDROM)) {
+        this->m_commandRunner->writeFile(ANDROID0_SYSFS_IMG_CDROM, "0");
+    }
+    if (QFileInfo::exists(ANDROID0_SYSFS_IMG_RO)) {
+        this->m_commandRunner->writeFile(ANDROID0_SYSFS_IMG_RO, writableDiskImage ? "0" : "1");
+    }
+
     this->m_commandRunner->writeFile(ANDROID0_SYSFS_IMG_FILE, selectedIso);
     emit selectedISOChanged();
 
